@@ -1,6 +1,6 @@
 import { IPersona, PersonaTone } from "@/data/types";
 import { basePromptGenerator } from "./basePromptGenerator";
-import { streamText } from "ai";
+import { streamText, ModelMessage } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 
 const client = createOpenAI({
@@ -8,37 +8,25 @@ const client = createOpenAI({
     baseURL: process.env.OPENROUTER_BASE_URL,
 });
 
-
 export async function generateAIResponse(
-    message: string,
-    temperature: number = 0.7,
-    persona: IPersona[],
+    messages: ModelMessage[],
+    persona: IPersona,
     personaTone: PersonaTone = "default",
+    temperature: number = 0.7,
 ) {
     try {
-        const currentPersona = persona[0]
-        const basePrompt = basePromptGenerator(currentPersona, personaTone);
-
-        const userInstruction = `
-        TASK:
-        Respond to this message: "${message}"
-        RESPONSE GUIDELINES:
-        - Respond in Hinglish style as ${currentPersona.name}
-        - Keep your response to 3-4 Lines
-        - Stay true to your unique voice and personality`;
-        const prompt = basePrompt + "\n\n" + userInstruction;
+        const systemPrompt = basePromptGenerator(persona, personaTone);
 
         const result = streamText({
             model: client('gpt-4o-mini'),
-            prompt,
+            system: systemPrompt,
+            messages,
             temperature,
+        });
 
-        })
-
-
-
-        //. 
+        return result;
     } catch (error) {
         console.error("Error generating AI response:", error);
+        throw error;
     }
 }
