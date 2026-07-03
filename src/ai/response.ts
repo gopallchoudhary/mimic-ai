@@ -3,6 +3,11 @@ import { basePromptGenerator } from "./basePromptGenerator";
 import { streamText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 
+const client = createOpenAI({
+    apiKey: process.env.OPENROUTER_API_KEY,
+    baseURL: process.env.OPENROUTER_BASE_URL,
+});
+
 
 export async function generateAIResponse(
     message: string,
@@ -22,6 +27,17 @@ export async function generateAIResponse(
         - Keep your response to 3-4 Lines
         - Stay true to your unique voice and personality`;
         const prompt = basePrompt + "\n\n" + userInstruction;
+
+        const result = streamText({
+            model: client('gpt-4o-mini'),
+            prompt,
+            temperature,
+
+        })
+
+
+
+        //. 
     } catch (error) {
         console.error("Error generating AI response:", error);
     }
