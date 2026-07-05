@@ -15,8 +15,7 @@ import { useChatStore } from "@/components/ChatStoreProvider";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Menu, Trash2, ShieldAlert } from "lucide-react";
+import { Menu, Trash2, ShieldAlert, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
@@ -34,6 +33,10 @@ export default function ChatPage() {
 	// Chat store — preserves messages across persona switches
 	const { getMessages, setMessages, clearMessages, getAllLastMessages } =
 		useChatStore();
+
+	const [showScrollButton, setShowScrollButton] = useState(false);
+	const [hasNewMessages, setHasNewMessages] = useState(false);
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 	// Find the persona
 	const persona = personas.find((p) => p.id === personaId);
@@ -67,10 +70,84 @@ export default function ChatPage() {
 		},
 	});
 
+	const isLoading = status === "submitted" || status === "streaming";
+
+	// Helper to extract text content from a UIMessage
+	const getMessageText = (msg: any): string => {
+		if (Array.isArray(msg.parts)) {
+			return msg.parts
+				.filter((p: any) => p.type === "text")
+				.map((p: any) => p.text || "")
+				.join("");
+		}
+		return "";
+	};
+
+	// Filter out empty assistant messages (AI SDK adds a placeholder with empty parts while streaming starts)
+	const renderedMessages = useMemo(() => {
+		return messages.filter((msg) => {
+			if (msg.role === "user") return true;
+			return getMessageText(msg).trim().length > 0;
+		});
+	}, [messages]);
+
+	const showTypingIndicator =
+		isLoading &&
+		(renderedMessages.length === 0 ||
+			renderedMessages[renderedMessages.length - 1].role === "user");
+
 	// Sync messages back to the store whenever they change
 	useEffect(() => {
 		setMessages(personaId, messages);
 	}, [messages, personaId, setMessages]);
+
+	// Scroll container to bottom
+	const scrollToBottom = useCallback(() => {
+		if (scrollContainerRef.current) {
+			scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+		}
+		setHasNewMessages(false);
+	}, []);
+
+	// Handle viewport scroll events
+	const handleScroll = useCallback(() => {
+		if (scrollContainerRef.current) {
+			const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+			const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+			setShowScrollButton(!isNearBottom);
+			if (isNearBottom) {
+				setHasNewMessages(false);
+			}
+		}
+	}, []);
+
+	// Auto-scroll when messages change or typing indicator status toggles
+	const prevMessagesLength = useRef(messages.length);
+	useEffect(() => {
+		if (scrollContainerRef.current) {
+			const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+			const isNearBottom = scrollHeight - scrollTop - clientHeight < 250;
+
+			if (messages.length > prevMessagesLength.current) {
+				if (isNearBottom) {
+					setTimeout(scrollToBottom, 30);
+				} else {
+					setHasNewMessages(true);
+				}
+			}
+		}
+		prevMessagesLength.current = messages.length;
+	}, [messages, scrollToBottom]);
+
+	useEffect(() => {
+		if (scrollContainerRef.current) {
+			const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+			const isNearBottom = scrollHeight - scrollTop - clientHeight < 250;
+			if (isNearBottom) {
+				setTimeout(scrollToBottom, 30);
+			}
+		}
+	}, [showTypingIndicator, scrollToBottom]);
 
 	// Fetch remaining message limits from the server
 	const fetchLimits = useCallback(async () => {
@@ -97,7 +174,6 @@ export default function ChatPage() {
 		setMessagesLeft(15); // Reset limit visually on clear
 	};
 
-	const isLoading = status === "submitted" || status === "streaming";
 
 	const [input, setInput] = useState("");
 
@@ -113,25 +189,6 @@ export default function ChatPage() {
 		setInput(e.target.value);
 	};
 
-	// Helper to extract text content from a UIMessage
-	const getMessageText = (msg: any): string => {
-		if (Array.isArray(msg.parts)) {
-			return msg.parts
-				.filter((p: any) => p.type === "text")
-				.map((p: any) => p.text || "")
-				.join("");
-		}
-		return "";
-	};
-
-	// Filter out empty assistant messages (AI SDK adds a placeholder with empty parts while streaming starts)
-	const renderedMessages = useMemo(() => {
-		return messages.filter((msg) => {
-			if (msg.role === "user") return true;
-			return getMessageText(msg).trim().length > 0;
-		});
-	}, [messages]);
-
 	// Build sidebar preview map: all stored personas + live current persona preview
 	const lastMessages = useMemo<Record<string, string>>(() => {
 		// Start from the persisted store (covers all other personas)
@@ -146,16 +203,6 @@ export default function ChatPage() {
 		}
 		return base;
 	}, [personaId, renderedMessages, getAllLastMessages]);
-
-	const showTypingIndicator =
-		isLoading &&
-		(renderedMessages.length === 0 ||
-			renderedMessages[renderedMessages.length - 1].role === "user");
-
-	// Auto-scroll to bottom when new messages arrive or typing status changes
-	useEffect(() => {
-		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages, showTypingIndicator]);
 
 	if (!persona) {
 		return null;
@@ -242,14 +289,18 @@ export default function ChatPage() {
 					</div>
 				</header>
 
-				{/* Chat Messages */}
-				<div className="flex-1 overflow-hidden">
-					<ScrollArea className="h-full">
-						<div className="max-w-3xl mx-auto p-4 md:p-6">
+				{/* Chat Messages Container */}
+				<div className="flex-1 overflow-hidden relative">
+					<div
+						ref={scrollContainerRef}
+						onScroll={handleScroll}
+						className="h-full overflow-y-auto"
+					>
+						<div className="max-w-3xl mx-auto p-4 md:p-6 pb-20">
 							{error && (
 								error.message?.includes("daily limit") || error.message?.includes("RATE_LIMITED") ? (
 									// Rate limit banner
-									<Card className="p-5 mb-4 border-amber-500/40 bg-amber-500/10 dark:bg-amber-400/5 backdrop-blur-sm">
+									<Card className="p-5 mb-4 border-amber-500/40 bg-amber-500/10 dark:bg-amber-400/5 backdrop-blur-sm animate-fade-in">
 										<div className="flex items-start gap-3">
 											<ShieldAlert className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
 											<div>
@@ -265,22 +316,54 @@ export default function ChatPage() {
 									</Card>
 								)
 							)}
-							{/* Welcome card — only when no messages and not loading */}
+
+							{/* Welcome / Onboarding Starter Questions */}
 							{renderedMessages.length === 0 && !isLoading && (
-								<Card className="p-8 text-center border border-white/20 dark:border-white/5 bg-white/40 dark:bg-white/[0.01] backdrop-blur-md">
-									<Avatar className="h-20 w-20 mx-auto mb-4 border border-white/30 dark:border-white/10">
-										<AvatarImage src={persona.avatar} alt={persona.name} />
-										<AvatarFallback>
-											{persona.name.substring(0, 2)}
-										</AvatarFallback>
-									</Avatar>
-									<h2 className="text-xl font-semibold mb-2">
-										Start chatting with {persona.name}
-									</h2>
-									<p className="text-sm text-muted-foreground/90 max-w-md mx-auto">
-										Ask anything about {persona.expertise.join(", ")} and more!
-									</p>
-								</Card>
+								<div className="flex flex-col items-center justify-center py-12 text-center max-w-2xl mx-auto space-y-8 animate-fade-in">
+									<div>
+										<Avatar className="h-20 w-20 mx-auto mb-4 border-2 border-white/30 dark:border-white/10 shadow-lg">
+											<AvatarImage src={persona.avatar} alt={persona.name} />
+											<AvatarFallback>
+												{persona.name.substring(0, 2)}
+											</AvatarFallback>
+										</Avatar>
+										<h2 className="text-2xl font-bold tracking-tight mb-2">
+											Chat with {persona.name}
+										</h2>
+										<p className="text-sm text-muted-foreground/80 max-w-md mx-auto leading-relaxed">
+											Ask me about {persona.expertise.join(", ")} or pick one of the conversation starters below:
+										</p>
+									</div>
+
+									{/* Starter Prompt Cards */}
+									<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full pt-4">
+										{(personaId === "hc"
+											? [
+													"How do I start learning DSA?",
+													"Tell me about freeapi.app.",
+													"Can you give me a Web Dev roadmap?"
+											  ]
+											: [
+													"Explain RAG and vector DBs.",
+													"What is Next.js Turbopack?",
+													"How do I build GenAI apps?"
+											  ]
+										).map((promptText, idx) => (
+											<button
+												key={idx}
+												onClick={() => {
+													sendMessage({ text: promptText });
+												}}
+												className="p-4 rounded-xl border border-white/20 dark:border-white/5 bg-white/40 dark:bg-white/[0.02] hover:bg-white/60 dark:hover:bg-white/[0.05] hover:border-blue-500/30 dark:hover:border-blue-400/20 text-xs font-semibold text-left leading-relaxed transition-all duration-300 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer shadow-sm hover:shadow group text-foreground"
+											>
+												<span className="block text-muted-foreground group-hover:text-primary mb-1 text-[9px] font-bold uppercase tracking-wider">
+													Starter Prompt
+												</span>
+												{promptText}
+											</button>
+										))}
+									</div>
+								</div>
 							)}
 
 							{/* Messages list */}
@@ -327,7 +410,23 @@ export default function ChatPage() {
 
 							<div ref={messagesEndRef} />
 						</div>
-					</ScrollArea>
+					</div>
+
+					{/* Floating Scroll-to-Bottom Button */}
+					{showScrollButton && (
+						<Button
+							onClick={scrollToBottom}
+							size="icon"
+							variant="secondary"
+							className="absolute bottom-6 right-6 z-30 h-10 w-10 rounded-full border border-white/20 dark:border-white/10 bg-background/85 backdrop-blur-md text-foreground shadow-md hover:bg-muted/95 active:scale-95 transition-all duration-300 hover:scale-105 cursor-pointer"
+							title="Scroll to bottom"
+						>
+							<ArrowDown className="h-4 w-4" />
+							{hasNewMessages && (
+								<span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-blue-500 border-2 border-background animate-pulse" />
+							)}
+						</Button>
+					)}
 				</div>
 
 				{/* Input */}

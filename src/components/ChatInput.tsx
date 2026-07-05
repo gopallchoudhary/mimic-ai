@@ -50,17 +50,17 @@ export function ChatInput({
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className="flex flex-col gap-2">
-			{/* Settings panel — right-aligned, sits just above the ⚙️ and ➤ buttons */}
+		<form onSubmit={handleSubmit} className="relative flex flex-col gap-2">
+			{/* Settings panel — floats absolute above the input row, no page reflows */}
 			<div
 				className={cn(
-					"flex justify-end overflow-hidden transition-all duration-300 ease-in-out",
-					showSettings ? "max-h-48 opacity-100" : "max-h-0 opacity-0",
+					"absolute bottom-14 right-0 z-40 w-72 md:w-80 rounded-2xl border border-white/25 dark:border-white/10 bg-background/95 dark:bg-background/90 backdrop-blur-md px-4 py-4 shadow-xl flex flex-col gap-3 transition-all duration-200 ease-out origin-bottom-right",
+					showSettings
+						? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+						: "opacity-0 scale-95 translate-y-2 pointer-events-none",
 				)}
 			>
-				<div className="rounded-xl border border-border/60 bg-muted/40 backdrop-blur-sm px-4 py-3 shadow-sm flex flex-col gap-3">
-					{settingsPanel}
-				</div>
+				{settingsPanel}
 			</div>
 
 			{/* Input row — taller h-12 input + larger buttons with h-5 icons */}
