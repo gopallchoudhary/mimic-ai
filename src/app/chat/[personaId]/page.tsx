@@ -38,7 +38,7 @@ export default function ChatPage() {
         }
     }, [persona, router]);
 
-    const { messages, sendMessage, isLoading, error } = useChat({
+    const { messages, sendMessage, error, status } = useChat({
         transport: new DefaultChatTransport({
             api: "/api/chat",
             body: () => ({
@@ -50,10 +50,9 @@ export default function ChatPage() {
         onError: (error) => {
             console.error("Chat error:", error);
         },
-        onResponse: (response) => {
-            console.log("Response received:", response);
-        },
     });
+
+    const isLoading = status === "submitted" || status === "streaming";
 
     const [input, setInput] = useState("");
 
@@ -69,19 +68,22 @@ export default function ChatPage() {
         setInput(e.target.value);
     };
 
+    // Helper to extract text content from a UIMessage
+    const getMessageText = (msg: any): string => {
+        if (Array.isArray(msg.parts)) {
+            return msg.parts
+                .filter((p: any) => p.type === "text")
+                .map((p: any) => p.text || "")
+                .join("");
+        }
+        return "";
+    };
+
     // Filter out empty assistant messages (AI SDK adds a placeholder with empty parts while streaming starts)
     const renderedMessages = useMemo(() => {
         return messages.filter((msg) => {
             if (msg.role === "user") return true;
-            // Check parts array for any text content (AI SDK streams via parts)
-            if (Array.isArray(msg.parts)) {
-                return msg.parts.some(
-                    (p: { type: string; text?: string }) => p.type === "text" && (p.text ?? "").trim().length > 0
-                );
-            }
-            // Fallback: check content string
-            const text = typeof msg.content === "string" ? msg.content : "";
-            return text.trim().length > 0;
+            return getMessageText(msg).trim().length > 0;
         });
     }, [messages]);
 
@@ -89,9 +91,7 @@ export default function ChatPage() {
     const lastMessages = useMemo<Record<string, string>>(() => {
         if (renderedMessages.length === 0) return {};
         const last = renderedMessages[renderedMessages.length - 1];
-        const text = typeof last.content === "string"
-            ? last.content
-            : "";
+        const text = getMessageText(last);
         return { [personaId]: text.slice(0, 80) };
     }, [personaId, renderedMessages]);
 

@@ -12,11 +12,11 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-                code({ node, inline, className, children, ...props }) {
+                code({ node, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || "");
                     const language = match ? match[1] : "";
 
-                    return !inline && match ? (
+                    return match ? (
                         <div className="relative my-4 rounded-lg overflow-hidden">
                             {language && (
                                 <div className="absolute top-0 right-0 px-3 py-1 text-xs text-gray-400 bg-gray-800/50 rounded-bl-lg">
@@ -24,7 +24,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                                 </div>
                             )}
                             <SyntaxHighlighter
-                                style={oneDark}
+                                style={oneDark as any}
                                 language={language}
                                 PreTag="div"
                                 customStyle={{
@@ -35,7 +35,6 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
                                     lineHeight: "1.5",
                                     borderRadius: "0.5rem",
                                 }}
-                                {...props}
                             >
                                 {String(children).replace(/\n$/, "")}
                             </SyntaxHighlighter>
