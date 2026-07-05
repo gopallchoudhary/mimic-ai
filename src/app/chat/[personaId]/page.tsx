@@ -16,7 +16,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Menu, Trash2 } from "lucide-react";
+import { Menu, Trash2, ShieldAlert } from "lucide-react";
 
 export default function ChatPage() {
 	const params = useParams();
@@ -205,11 +205,23 @@ export default function ChatPage() {
 					<ScrollArea className="h-full">
 						<div className="max-w-3xl mx-auto p-4 md:p-6">
 							{error && (
-								<Card className="p-4 mb-4 bg-destructive/10 border-destructive">
-									<p className="text-sm text-destructive">
-										Error: {error.message}
-									</p>
-								</Card>
+								error.message?.includes("daily limit") || error.message?.includes("RATE_LIMITED") ? (
+									// Rate limit banner
+									<Card className="p-5 mb-4 border-amber-500/40 bg-amber-500/10 dark:bg-amber-400/5 backdrop-blur-sm">
+										<div className="flex items-start gap-3">
+											<ShieldAlert className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+											<div>
+												<p className="text-sm font-semibold text-amber-600 dark:text-amber-400 mb-1">Daily limit reached</p>
+												<p className="text-sm text-amber-700/80 dark:text-amber-300/70">{error.message}</p>
+											</div>
+										</div>
+									</Card>
+								) : (
+									// Generic error
+									<Card className="p-4 mb-4 bg-destructive/10 border-destructive">
+										<p className="text-sm text-destructive">Error: {error.message}</p>
+									</Card>
+								)
 							)}
 							{/* Welcome card — only when no messages and not loading */}
 							{renderedMessages.length === 0 && !isLoading && (
