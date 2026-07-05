@@ -25,6 +25,7 @@ export default function ChatPage() {
 
     const [tone, setTone] = useState<PersonaTone>("default");
     const [temperature, setTemperature] = useState(0.7);
+    const [showSettings, setShowSettings] = useState(false);
 
     // Find the persona
     const persona = personas.find((p) => p.id === personaId);
@@ -105,11 +106,6 @@ export default function ChatPage() {
                         </div>
                     </div>
 
-                    {/* Controls */}
-                    <div className="flex flex-wrap gap-4 items-center">
-                        <ToneSelector selectedTone={tone} onToneChange={setTone} />
-                        <TemperatureSlider value={temperature} onChange={setTemperature} />
-                    </div>
                 </div>
             </header>
 
@@ -160,6 +156,14 @@ export default function ChatPage() {
                         handleInputChange={handleInputChange}
                         handleSubmit={handleSubmit}
                         isLoading={isLoading}
+                        showSettings={showSettings}
+                        onSettingsToggle={() => setShowSettings((prev) => !prev)}
+                        settingsPanel={
+                            <div className="flex flex-col gap-3">
+                                <ToneSelector selectedTone={tone} onToneChange={setTone} />
+                                <TemperatureSlider value={temperature} onChange={setTemperature} />
+                            </div>
+                        }
                     />
                 </div>
             </div>

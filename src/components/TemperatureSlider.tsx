@@ -14,7 +14,7 @@ export function TemperatureSlider({ value, onChange }: TemperatureSliderProps) {
             <div className="flex-1 max-w-[200px]">
                 <Slider
                     value={[value]}
-                    onValueChange={([newValue]) => onChange(newValue)}
+                    onValueChange={(newValue) => onChange(newValue as number)}
                     min={0.1}
                     max={1.0}
                     step={0.1}
