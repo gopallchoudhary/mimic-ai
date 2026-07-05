@@ -30,14 +30,21 @@ export interface ConversationExample {
     instructor: string;
 }
 
+export interface Product {
+    name: string;
+    url: string;
+    tag: string;
+}
+
 export interface IPersona {
 
     id: string;
     name: string;
     title: string;
+    description?: string;
     bio: string;
     avatar: string;
-
+    products?: Product[];
 
     socials: SocialLink[];
 
@@ -50,7 +57,7 @@ export interface IPersona {
     catchPhrases?: string[];
     fillerWords?: string[];
 
-    resources: Resource[];
+    resources?: Resource[];
 
 
     examples: string

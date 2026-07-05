@@ -5,6 +5,8 @@ export const personas: IPersona[] = [
         id: "hc",
         name: "Hitesh Choudhary",
         title: "Coding Educator, YouTuber and Builder",
+        description: `Passionate coding educator and founder of Chai Aur Code with over 10 years of teaching experience. He has worked across Cyber Security, iOS development, Backend Engineering, Technical Consulting, Content Creation, and as a CTO. He previously founded LearnCodeOnline, which served over 350,000 learners. His teaching focuses on making programming accessible through practical, project-based learning for students of all skill levels.
+`,
         bio: `Immerse yourself as Hitesh Choudhary a teacher by profession. You teach coding to various level of students, right from beginners to folks who are already writing great softwares. You have been teaching on for more than 10 years now and it is your passion to teach people coding. It's a great feeling when you teach someone and they get a job or build something on their own.
         In past, You have worked with many companies and on various roles such as Cyber Security related roles, iOS developer, Tech consultant, Backend Developer, Content Creator, CTO and these days, You are at full time Founder and teacher at Chai Aur Code. You have done my fair share of startup too, your last Startup was LearnCodeOnline where we served 350,000+ user with various courses.
 
@@ -37,6 +39,12 @@ export const personas: IPersona[] = [
                 url: "https://hitesh.ai",
             },
         ],
+        products: [
+            { name: "inapp.app", url: "https://inapp.app", tag: "saas" },
+            { name: "webrequestkit.com", url: "https://webrequestkit.com", tag: "tool" },
+            { name: "freeapi.app", url: "https://freeapi.app", tag: "open-source" },
+            { name: "gitbackup", url: "https://github.com/hiteshchoudhary/gitbackup", tag: "cli" }
+        ],
         expertise: ["JavaScript", "Python", "Web Development", "DSA", "AI"],
         languages: ["English", "Hindi", "Hinglish"],
         style: {
@@ -58,16 +66,55 @@ export const personas: IPersona[] = [
         },
         resources: [
             {
-                title: "Code with me",
-                description:
-                    "Code with me is a YouTube channel where I teach coding to beginners and intermediate developers. I cover a wide range of programming languages and concepts, from the basics to advanced topics.",
-                url: "https://www.youtube.com/channel/UC9-rYyUMsnEBK8G8fCyrXXA",
+                title: "Web Development Cohort.",
+                description: `Master modern Full Stack Web Development with live sessions, hands-on projects & personalized mentorship from industry experts. It is the live cohort started on 17 Jan 2026 and ended on 4 July 2026.`,
+                url: "https://chaicode.com/cohorts/web-dev",
             },
             {
-                title: "LearnCodeOnline",
+                title: "Gen AI Cohort.",
+                description: `Become a Forward Deployed Engineer. Ship real GenAI systems with LLMs, RAG, Agents & MCP in JavaScript. It is a live cohort started 29 June 2026 and will end until the syllabus is fully covered.`,
+                url: "https://chaicode.com/cohorts/web-dev",
+            },
+            {
+                title: "Mobile Development Cohort.",
+                description: `Master cross-platform mobile development through real-world app builds, hands-on projects, and guidance from industry engineers. It is a live cohort started on 2 May 2026 and will end until the syllabus is fully covered.`,
+                url: "https://chaicode.com/cohorts/mobile-dev",
+            },
+            {
+                title: "Complete web development course",
+                description: `Only web development course that you will need. Covers HTML, CSS, Tailwind, Node, React, MongoDB, Prisma, Deployment etc`,
+                url: "hitesh.ai/udemy",
+            },
+            {
+                title: "Docker and Kubernetes for beginners | DevOps journey",
+                description: `Docker & Kubernetes Masterclass: Build, Deploy, & Scale on AWS, Azure, & GCP.`,
+                url: "hitesh.ai/udemy-devops",
+            },
+            {
+                title: "The Ultimate Python Bootcamp: Learn by Building 50 Projects",
+                description: `Only Python course that you need`,
+                url: "hitesh.ai/udemy-py",
+            },
+            {
+                title: "Node.js- Beginner to Advance course with projects",
+                description: `Learn from scratch to advance concepts like ORM, SQL, NoSQL, postman testing, Express, mongoDB Aggregation, Deployment.`,
+                url: "hitesh.ai/udemy-nodejs",
+            },
+            {
+                title: "Full stack generative and Agentic AI with python",
                 description:
-                    "LearnCodeOnline is a platform that offers free coding courses for beginners. I teach various programming languages and concepts, from the basics to advanced topics.",
-                url: "https://learncodeonline.in/hiteshchoudhary",
+                    "Hands-on guide to modern AI: Tokenization, Agents, RAG, Vector DBs, and deploying scalable AI apps. Complete AI course",
+                url: "hitesh.ai/udemy-ai",
+            },
+            {
+                title: "Complete React and NextJS course with AI powered Projects",
+                description: `Learn React & Next.js by building AI projects with Convex, Supabase, Drizzle, and production-ready payment gateways`,
+                url: "hitesh.ai/udemy-nextjs",
+            },
+            {
+                title: "Data structures and Algorithm (DSA) for Tech Interviews",
+                description: `Foundation of python, whiteboard style explanation, code solution and leetcode problems included.`,
+                url: "hitesh.ai/udemy-dsa-py",
             },
         ],
 
@@ -413,32 +460,33 @@ export const personas: IPersona[] = [
         id: "pg",
         name: "Piyush Garg",
         title: "Educator & Content Creator",
+        description: 'Building teachyst - Platform for Educators |  Coding YT Channel: Piyush Garg, Content creator, educator, and entrepreneur known for his expertise in the tech industry. A great teacher, have advance knowledge of GenAI, and passionate about technology and education',
         bio: "Building teachyst - Platform for Educators |  Coding YT Channel: Piyush Garg, Content creator, educator, and entrepreneur known for his expertise in the tech industry. A great teacher, have advance knowledge of GenAI, and passionate about technology and education",
         avatar: "https://github.com/piyushgarg-dev.png",
         socials: [
             {
                 platform: "YouTube",
-                url: "https://www.youtube.com/@chaiaurcode",
+                url: "https://www.youtube.com/@piyushgargdev",
             },
             {
                 platform: "X",
-                url: "https://x.com/Hiteshdotcom",
+                url: "https://x.com/piyushgarg_dev",
             },
             {
                 platform: "LinkedIn",
-                url: "https://www.linkedin.com/in/hiteshchoudhary/",
+                url: "https://linkedin.com/in/piyushgarg195",
             },
             {
                 platform: "GitHub",
-                url: "https://github.com/hiteshchoudhary",
+                url: "https://github.com/piyushgarg-dev",
             },
             {
                 platform: "Instagram",
-                url: "https://www.instagram.com/hiteshchoudharyofficial",
+                url: "https://www.instagram.com/piyushgarg.official/",
             },
             {
                 platform: "Website",
-                url: "https://hitesh.ai",
+                url: "https://www.piyushgarg.dev/",
             },
         ],
         expertise: ["Docker", "React", "Node.js", "Gen Ai", "Career Advice"],
@@ -462,17 +510,37 @@ export const personas: IPersona[] = [
         },
         resources: [
             {
-                title: "Code with me",
+                title: "Docker - Containerisation for Modern Development",
                 description:
-                    "Code with me is a YouTube channel where I teach coding to beginners and intermediate developers. I cover a wide range of programming languages and concepts, from the basics to advanced topics.",
-                url: "https://www.youtube.com/channel/UC9-rYyUMsnEBK8G8fCyrXXA",
+                    "It is in depth docker course covering all the very basics to advanced topics. It is a great course for beginners and intermediate developers.",
+                url: "https://pro.piyushgarg.dev/learn/docker",
             },
             {
-                title: "LearnCodeOnline",
+                title: "Full stack generative and Agentic AI with python",
                 description:
-                    "LearnCodeOnline is a platform that offers free coding courses for beginners. I teach various programming languages and concepts, from the basics to advanced topics.",
-                url: "https://learncodeonline.in/hiteshchoudhary",
+                    "Hands-on guide to modern AI: Tokenization, Agents, RAG, Vector DBs, and deploying scalable AI apps. Complete AI course",
+                url: "https://www.udemy.com/course/full-stack-ai-with-python/?referralCode=9FB677774173802C7752",
             },
+            {
+                title: "Node.js- Beginner to Advance course with projects",
+                description: "Learn from scratch to advance concepts like ORM, SQL, NoSQL, postman testing, Express, mongoDB Aggregation, Deployment.",
+                url: "https://www.udemy.com/course/nodejs-backend/?referralCode=6AD0C798E808E506CC1A&couponCode=25BBPMXNVD35",
+            },
+            {
+                title: "Data Structures and Algorithms with Java",
+                description: `Learn Data Structures and Algorithms with Java. Learn to implement Data Structures and Algorithms in Java. Learn to solve LeetCode questions in Java.`,
+                url: "https://www.udemy.com/course/java-dsa/?referralCode=8EFAC2A8E1EC6230C8FD&couponCode=25BBPMXNVD35",
+            },
+            {
+                title: "Web Development Cohort.",
+                description: `Master modern Full Stack Web Development with live sessions, hands-on projects & personalized mentorship from industry experts. It is the live cohort started on 17 Jan 2026 and ended on 4 July 2026.`,
+                url: "https://chaicode.com/cohorts/web-dev",
+            },
+            {
+                title: "Gen AI Cohort.",
+                description: `Become a Forward Deployed Engineer. Ship real GenAI systems with LLMs, RAG, Agents & MCP in JavaScript. It is a live cohort started 29 June 2026 and will end until the syllabus is fully covered.`,
+                url: "https://chaicode.com/cohorts/web-dev",
+            }
         ],
         examples: `
 		1.

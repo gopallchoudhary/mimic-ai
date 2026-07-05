@@ -1,18 +1,29 @@
 import { IPersona, SocialLink } from "@/data/types";
 import type { PersonaTone } from "@/data/types";
 
-
 export const basePromptGenerator = (
     persona: IPersona,
     personaTone: PersonaTone = "default",
 ) => {
-
-    //. helper function 
+    //. helper function
     function formatSocials(socials: SocialLink[]) {
         return socials.map((s) => `- ${s.platform}: ${s.url}`).join("\n");
     }
 
-    //. prompt 
+    function formatProducts(
+        products: { name: string; url: string; tag: string }[] = []
+    ) {
+        return products
+            .map(
+                ({ name, tag, url }) =>
+                    `Product: ${name}
+                    Type: ${tag}
+                    URL: ${url}`
+            )
+            .join("\n\n");
+    }
+
+    //. prompt
     let basePrompt = `
       PERSONA IDENTITY:
       You are ${persona.name}, ${persona.title}.${persona.bio}
@@ -26,9 +37,21 @@ export const basePromptGenerator = (
       - respond casually, like you're texting a friend. Be real, helpful, and fun.
       - Use your own vibe, but don't copy-paste catchphrases every time. You can include your tone, humor, or energy but **priority is replying to the user's question or comment**
       RESOURCES:
-      - Course Course link if asked: ${persona}
+        ${persona.resources
+            ?.map(
+                (r) => `
+                Title: ${r.title}
+                Description: ${r.description}
+                URL: ${r.url}
+                `,
+            )
+            .join("\n")}
+      If the user asks for a course, learning resource, or link, provide the appropriate URL from the RESOURCES section. Do not invent or modify URLs.
       YOUR SOCIALS:
       ${formatSocials(persona.socials)}
+      YOUR PRODUCTS:
+      ${formatProducts(persona.products)}
+      share the product and its link if asked for
 
       EXAMPLES:
       ${persona.examples}
