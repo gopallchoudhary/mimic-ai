@@ -1,0 +1,142 @@
+"use client";
+
+import Link from "next/link";
+import { personas } from "@/data/personas";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { UserButton } from "@clerk/nextjs";
+import { PlusCircle, X, MessageSquare } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface ChatSidebarProps {
+    currentPersonaId: string;
+    lastMessages: Record<string, string>;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export function ChatSidebar({
+    currentPersonaId,
+    lastMessages,
+    isOpen,
+    onClose,
+}: ChatSidebarProps) {
+    return (
+        <>
+            {/* Mobile backdrop */}
+            <div
+                className={cn(
+                    "fixed inset-0 z-40 bg-black/50 md:hidden transition-opacity duration-300",
+                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                )}
+                onClick={onClose}
+            />
+
+            {/* Sidebar panel */}
+            <aside
+                className={cn(
+                    "fixed md:relative inset-y-0 left-0 z-50 flex h-full w-64 shrink-0 flex-col border-r bg-background",
+                    "transition-transform duration-300 ease-in-out md:translate-x-0",
+                    isOpen ? "translate-x-0" : "-translate-x-full"
+                )}
+            >
+                {/* Top — brand + New Chat */}
+                <div className="flex items-center justify-between border-b px-4 py-3">
+                    <div className="flex items-center gap-2">
+                        <MessageSquare className="h-5 w-5 text-primary" />
+                        <span className="font-bold text-base">Mimic AI</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <Link href="/" onClick={onClose}>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                title="New Chat"
+                            >
+                                <PlusCircle className="h-4 w-4" />
+                            </Button>
+                        </Link>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 md:hidden"
+                            onClick={onClose}
+                        >
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Persona list */}
+                <ScrollArea className="flex-1 py-2">
+                    <div className="space-y-0.5 px-2">
+                        {personas.map((persona) => {
+                            const isActive = persona.id === currentPersonaId;
+                            const preview = lastMessages[persona.id];
+                            return (
+                                <Link
+                                    key={persona.id}
+                                    href={`/chat/${persona.id}`}
+                                    onClick={onClose}
+                                >
+                                    <div
+                                        className={cn(
+                                            "flex items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer transition-colors",
+                                            isActive
+                                                ? "bg-primary/10"
+                                                : "hover:bg-muted"
+                                        )}
+                                    >
+                                        {/* Avatar + active dot */}
+                                        <div className="relative shrink-0">
+                                            <Avatar className="h-9 w-9">
+                                                <AvatarImage
+                                                    src={persona.avatar}
+                                                    alt={persona.name}
+                                                />
+                                                <AvatarFallback className="text-xs">
+                                                    {persona.name.substring(0, 2)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            {isActive && (
+                                                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-background" />
+                                            )}
+                                        </div>
+
+                                        {/* Name + last message */}
+                                        <div className="min-w-0 flex-1">
+                                            <p
+                                                className={cn(
+                                                    "truncate text-sm font-medium leading-tight",
+                                                    isActive
+                                                        ? "text-primary"
+                                                        : "text-foreground"
+                                                )}
+                                            >
+                                                {persona.name}
+                                            </p>
+                                            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                                                {preview ?? "Start a conversation..."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </ScrollArea>
+
+                {/* Bottom — Clerk UserButton */}
+                <div className="flex items-center gap-3 border-t px-4 py-3">
+                    <UserButton />
+                    <span className="truncate text-sm text-muted-foreground">
+                        My Account
+                    </span>
+                </div>
+            </aside>
+        </>
+    );
+}
+

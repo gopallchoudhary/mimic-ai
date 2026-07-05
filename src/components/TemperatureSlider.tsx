@@ -6,12 +6,30 @@ interface TemperatureSliderProps {
 }
 
 export function TemperatureSlider({ value, onChange }: TemperatureSliderProps) {
+    const getLabel = (val: number) => {
+        if (val <= 0.3) return "Precise & Focused";
+        if (val <= 0.7) return "Balanced Vibe";
+        return "Creative & Playful";
+    };
+
+    const getDescription = (val: number) => {
+        if (val <= 0.3) return "Predictable, direct, and factual answers.";
+        if (val <= 0.7) return "A natural balance of creativity and consistency.";
+        return "Spontaneous, highly expressive, and random vibes.";
+    };
+
     return (
-        <div className="flex items-center gap-3">
-            <span className="text-sm font-medium whitespace-nowrap">
-                Temperature:
-            </span>
-            <div className="flex-1 max-w-[200px]">
+        <div className="flex flex-col gap-2 w-full min-w-[240px] max-w-[280px]">
+            <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Temperature
+                </span>
+                <span className="text-[11px] font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full select-none">
+                    {value.toFixed(1)} • {getLabel(value)}
+                </span>
+            </div>
+            
+            <div className="py-1">
                 <Slider
                     value={[value]}
                     onValueChange={(newValue) => onChange(newValue as number)}
@@ -21,9 +39,10 @@ export function TemperatureSlider({ value, onChange }: TemperatureSliderProps) {
                     className="cursor-pointer"
                 />
             </div>
-            <span className="text-sm text-muted-foreground min-w-[2.5rem] text-right">
-                {value.toFixed(1)}
-            </span>
+            
+            <p className="text-[11px] text-muted-foreground/80 leading-normal min-h-[1.5rem]">
+                {getDescription(value)}
+            </p>
         </div>
     );
 }

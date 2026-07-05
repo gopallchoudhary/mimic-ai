@@ -6,7 +6,7 @@ import { createUIMessageStreamResponse, toUIMessageStream, convertToModelMessage
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { messages, personaId, tone = "default", temperature = 0.7 } = body as {
+        const { messages, personaId, tone = "default", temperature = 0.6 } = body as {
             messages: UIMessage[];
             personaId: string;
             tone?: PersonaTone;

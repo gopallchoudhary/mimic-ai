@@ -12,7 +12,7 @@ export async function generateAIResponse(
     messages: ModelMessage[],
     persona: IPersona,
     personaTone: PersonaTone = "default",
-    temperature: number = 0.7,
+    temperature: number = 0.6,
 ) {
     try {
         const systemPrompt = basePromptGenerator(persona, personaTone);
