@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserButton } from "@clerk/nextjs";
 import { PlusCircle, X, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface ChatSidebarProps {
     currentPersonaId: string;
@@ -36,13 +37,13 @@ export function ChatSidebar({
             {/* Sidebar panel */}
             <aside
                 className={cn(
-                    "fixed md:relative inset-y-0 left-0 z-50 flex h-full w-64 shrink-0 flex-col border-r bg-background",
+                    "fixed md:relative inset-y-0 left-0 z-50 flex h-full w-64 shrink-0 flex-col border-r border-border/40 bg-background/80 dark:bg-background/40 backdrop-blur-md",
                     "transition-transform duration-300 ease-in-out md:translate-x-0",
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
                 {/* Top — brand + New Chat */}
-                <div className="flex items-center justify-between border-b px-4 py-3">
+                <div className="flex items-center justify-between border-b border-border/40 px-4 py-3">
                     <div className="flex items-center gap-2">
                         <MessageSquare className="h-5 w-5 text-primary" />
                         <span className="font-bold text-base">Mimic AI</span>
@@ -86,7 +87,7 @@ export function ChatSidebar({
                                             "flex items-center gap-3 rounded-lg px-3 py-2.5 cursor-pointer transition-colors",
                                             isActive
                                                 ? "bg-primary/10"
-                                                : "hover:bg-muted"
+                                                : "hover:bg-muted/60"
                                         )}
                                     >
                                         {/* Avatar + active dot */}
@@ -128,12 +129,17 @@ export function ChatSidebar({
                     </div>
                 </ScrollArea>
 
-                {/* Bottom — Clerk UserButton */}
-                <div className="flex items-center gap-3 border-t px-4 py-3">
-                    <UserButton />
-                    <span className="truncate text-sm text-muted-foreground">
-                        My Account
-                    </span>
+                {/* Bottom — Clerk UserButton + ThemeToggle */}
+                <div className="flex items-center justify-between border-t border-border/40 px-4 py-3 bg-muted/10 dark:bg-white/[0.01]">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <UserButton />
+                        <span className="truncate text-sm text-muted-foreground font-medium">
+                            My Account
+                        </span>
+                    </div>
+                    <div className="shrink-0">
+                        <ThemeToggle />
+                    </div>
                 </div>
             </aside>
         </>

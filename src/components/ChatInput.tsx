@@ -47,7 +47,7 @@ export function ChatInput({
 				</div>
 			</div>
 
-			{/* Input row — input + settings icon + send icon all in one row, unchanged */}
+			{/* Input row — taller h-12 input + larger buttons with h-5 icons */}
 			<div className="flex gap-2">
 				<Input
 					value={input}
@@ -55,24 +55,27 @@ export function ChatInput({
 					onKeyDown={onKeyDown}
 					placeholder="Type your message..."
 					disabled={isLoading}
-					className="flex-1"
+					className="flex-1 h-12 px-4 rounded-xl border-border/40 text-sm focus-visible:ring-1"
 				/>
-				<Button type="submit" disabled={isLoading || !input?.trim()}>
-					<Send className="h-4 w-4" />
-				</Button>
 				<Button
 					type="button"
 					variant="outline"
-					size="icon"
 					onClick={onSettingsToggle}
 					aria-label="Toggle settings"
 					className={cn(
-						"transition-colors duration-200",
+						"h-12 w-12 shrink-0 rounded-xl transition-colors duration-200 cursor-pointer",
 						showSettings &&
 							"bg-primary text-primary-foreground hover:bg-primary/90",
 					)}
 				>
-					<Settings2 className="h-4 w-4" />
+					<Settings2 className="h-5 w-5" />
+				</Button>
+				<Button 
+					type="submit" 
+					disabled={isLoading || !input?.trim()}
+					className="h-12 w-12 shrink-0 rounded-xl cursor-pointer"
+				>
+					<Send className="h-5 w-5" />
 				</Button>
 			</div>
 		</form>
