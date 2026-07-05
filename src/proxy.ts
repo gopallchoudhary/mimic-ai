@@ -6,10 +6,11 @@ const isAuthRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
 
 export const proxy = clerkMiddleware(async (auth, request) => {
   const { userId } = await auth()
+  const isLandingPage = request.nextUrl.pathname === '/'
 
-  // If signed-in user tries to visit auth pages, send them home
-  if (userId && isAuthRoute(request)) {
-    return NextResponse.redirect(new URL('/', request.url))
+  // If signed-in user tries to visit auth pages or the public landing page, redirect to /chat
+  if (userId && (isAuthRoute(request) || isLandingPage)) {
+    return NextResponse.redirect(new URL('/chat', request.url))
   }
 
   // If unauthenticated user tries to visit a protected route, redirect to sign-in

@@ -31,12 +31,12 @@ export function Header() {
             <div className="flex items-center gap-4">
                 <ThemeToggle />
                 <Show when="signed-out">
-                    <SignInButton mode="modal">
+                    <SignInButton mode="modal" forceRedirectUrl="/chat" fallbackRedirectUrl="/chat">
                         <button className="text-sm font-medium hover:text-primary transition-colors cursor-pointer">
                             Sign In
                         </button>
                     </SignInButton>
-                    <SignUpButton mode="modal">
+                    <SignUpButton mode="modal" forceRedirectUrl="/chat" fallbackRedirectUrl="/chat">
                         <button className="bg-primary hover:bg-primary/95 text-primary-foreground rounded-full font-medium text-sm h-9 px-4 cursor-pointer shadow-sm hover:shadow transition-all duration-200 active:scale-95">
                             Sign Up
                         </button>

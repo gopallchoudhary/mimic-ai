@@ -216,11 +216,11 @@ const isAuthRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
 
 | Route | Auth Required | Behavior |
 |-------|--------------|----------|
-| `/` | No | Public landing page |
-| `/chat` | No | Public persona grid |
-| `/chat/:personaId` | Yes | Redirects to sign-in if unauthenticated |
-| `/sign-in` | No | If already signed in, redirect to `/` |
-| `/sign-up` | No | If already signed in, redirect to `/` |
+| `/` | No (Redirects if Auth) | Public landing page for guests. If logged in, automatically redirected to `/chat`. |
+| `/chat` | No | Public persona selection grid. |
+| `/chat/:personaId` | Yes | Direct chat interface. Redirects to sign-in if unauthenticated. |
+| `/sign-in` | No | Sign-in page. If already signed in, redirected to `/chat`. |
+| `/sign-up` | No | Sign-up page. If already signed in, redirected to `/chat`. |
 
 ### Header visibility
 
