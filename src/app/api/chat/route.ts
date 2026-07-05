@@ -111,3 +111,58 @@ export async function POST(req: Request) {
         );
     }
 }
+
+export async function GET() {
+    try {
+        const { userId } = await auth();
+
+        if (!userId) {
+            return new Response(JSON.stringify({ error: "Unauthorized" }), {
+                status: 401,
+                headers: { "Content-Type": "application/json" },
+            });
+        }
+
+        // If bypass account, return mock values
+        if (userId === BYPASS_USER_ID) {
+            return new Response(
+                JSON.stringify({
+                    remaining: -1, // Special value for bypass/admin
+                    limit: 15,
+                    bypass: true,
+                }),
+                {
+                    status: 200,
+                    headers: { "Content-Type": "application/json" },
+                }
+            );
+        }
+
+        // Check the limit using rate: 0 (read-only)
+        const { remaining, limit } = await ratelimit.limit(userId, { rate: 0 });
+
+        return new Response(
+            JSON.stringify({
+                remaining,
+                limit,
+                bypass: false,
+            }),
+            {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+    } catch (error) {
+        console.error("Error fetching rate limits:", error);
+        return new Response(
+            JSON.stringify({
+                error: "Internal server error",
+                details: error instanceof Error ? error.message : String(error),
+            }),
+            {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+    }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { useParams, useRouter } from "next/navigation";
@@ -17,6 +17,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Menu, Trash2, ShieldAlert } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
 	const params = useParams();
@@ -28,6 +29,7 @@ export default function ChatPage() {
 	const [temperature, setTemperature] = useState(0.6);
 	const [showSettings, setShowSettings] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [messagesLeft, setMessagesLeft] = useState<number | null>(null);
 
 	// Chat store — preserves messages across persona switches
 	const { getMessages, setMessages, clearMessages, getAllLastMessages } =
@@ -70,10 +72,29 @@ export default function ChatPage() {
 		setMessages(personaId, messages);
 	}, [messages, personaId, setMessages]);
 
+	// Fetch remaining message limits from the server
+	const fetchLimits = useCallback(async () => {
+		try {
+			const res = await fetch("/api/chat");
+			if (res.ok) {
+				const data = await res.json();
+				setMessagesLeft(data.remaining);
+			}
+		} catch (err) {
+			console.error("Failed to fetch rate limits:", err);
+		}
+	}, []);
+
+	// Sync limits on mount, persona change, or when message history length changes
+	useEffect(() => {
+		fetchLimits();
+	}, [personaId, messages.length, fetchLimits]);
+
 	// Clear chat handler
 	const handleClearChat = () => {
 		clearMessages(personaId);
 		setChatMessages([]);
+		setMessagesLeft(15); // Reset limit visually on clear
 	};
 
 	const isLoading = status === "submitted" || status === "streaming";
@@ -186,17 +207,38 @@ export default function ChatPage() {
 							</p>
 						</div>
 
-						{/* Clear chat */}
-						<Button
-							variant="ghost"
-							size="icon"
-							className="shrink-0 text-muted-foreground hover:text-destructive transition-colors ml-auto"
-							onClick={handleClearChat}
-							title="Clear chat history"
-							aria-label="Clear chat history"
-						>
-							<Trash2 className="h-4 w-4" />
-						</Button>
+						{/* Actions (Limits + Clear Chat) */}
+						<div className="flex items-center gap-3 shrink-0 ml-auto">
+							{/* Limits left */}
+							{messagesLeft !== null && (
+								<span
+									className={cn(
+										"text-[11px] px-2.5 py-1 rounded-full font-semibold border transition-all duration-300 select-none",
+										messagesLeft === -1 // Bypass/admin
+											? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+											: messagesLeft <= 3
+												? "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 animate-pulse"
+												: messagesLeft <= 7
+													? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+													: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+									)}
+								>
+									{messagesLeft === -1 ? "Admin Vibe" : `${messagesLeft}/15 left`}
+								</span>
+							)}
+
+							{/* Clear chat */}
+							<Button
+								variant="ghost"
+								size="icon"
+								className="shrink-0 text-muted-foreground hover:text-destructive transition-colors cursor-pointer"
+								onClick={handleClearChat}
+								title="Clear chat history"
+								aria-label="Clear chat history"
+							>
+								<Trash2 className="h-4 w-4" />
+							</Button>
+						</div>
 					</div>
 				</header>
 
