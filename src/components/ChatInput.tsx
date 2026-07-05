@@ -1,4 +1,4 @@
-import { FormEvent, KeyboardEvent, ReactNode } from "react";
+import { FormEvent, KeyboardEvent, ReactNode, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send, Settings2 } from "lucide-react";
@@ -23,6 +23,22 @@ export function ChatInput({
 	onSettingsToggle,
 	settingsPanel,
 }: ChatInputProps) {
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	// Auto-focus on mount (when entering the chatroom)
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
+	// Re-focus after loading finishes (response received / send complete)
+	const wasLoadingRef = useRef(false);
+	useEffect(() => {
+		if (wasLoadingRef.current && !isLoading) {
+			inputRef.current?.focus();
+		}
+		wasLoadingRef.current = isLoading;
+	}, [isLoading]);
+
 	const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
@@ -50,6 +66,7 @@ export function ChatInput({
 			{/* Input row — taller h-12 input + larger buttons with h-5 icons */}
 			<div className="flex gap-2">
 				<Input
+					ref={inputRef}
 					value={input}
 					onChange={handleInputChange}
 					onKeyDown={onKeyDown}
