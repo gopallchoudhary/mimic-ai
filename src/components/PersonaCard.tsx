@@ -46,7 +46,7 @@ export function PersonaCard({ persona }: PersonaCardProps) {
                 <CardContent className="relative z-10">
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground/90 leading-relaxed line-clamp-3">
-                            {persona.bio.substring(0, 150)}...
+                            {persona.description.substring(0, 150)}...
                         </p>
                         <div className="flex flex-wrap gap-2 pt-1">
                             {persona.expertise.slice(0, 4).map((skill) => (

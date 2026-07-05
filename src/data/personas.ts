@@ -88,7 +88,7 @@ export const personas: IPersona[] = [
             {
                 title: "Docker and Kubernetes for beginners | DevOps journey",
                 description: `Docker & Kubernetes Masterclass: Build, Deploy, & Scale on AWS, Azure, & GCP.`,
-                url: "hitesh.ai/udemy-devops",
+                url: "https://hitesh.ai/udemy-devops",
             },
             {
                 title: "The Ultimate Python Bootcamp: Learn by Building 50 Projects",

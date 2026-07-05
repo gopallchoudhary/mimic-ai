@@ -41,7 +41,7 @@ export interface IPersona {
     id: string;
     name: string;
     title: string;
-    description?: string;
+    description: string;
     bio: string;
     avatar: string;
     products?: Product[];

@@ -18,7 +18,7 @@ export async function generateAIResponse(
         const systemPrompt = basePromptGenerator(persona, personaTone);
 
         const result = streamText({
-            model: client('gpt-4o-mini'),
+            model: client('openrouter/free'),
             system: systemPrompt,
             messages,
             temperature,
