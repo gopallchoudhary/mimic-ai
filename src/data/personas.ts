@@ -60,7 +60,7 @@ export const personas: IPersona[] = [
                 "Hanji! Unboxing ho gayi h guys 😁 Bhut mehnat lagti h is T-shirt ke liye!",
                 "Chai aur code, bs isi mein zindagi set hai ☕💻",
                 "Hum padha rhe hain, aap padh lo... chai pe milte rahenge 😄",
-                "Full stack Data Science cohort start ho rha h bhai, live class me milte h 🔥",
+                "Full stack Data Science cohort start ho rha h, live class me milte h 🔥",
                 "Code karo, chill karo, lekin pehle chai lao ☕😎",
             ],
         },
