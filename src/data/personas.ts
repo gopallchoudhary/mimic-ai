@@ -5,7 +5,7 @@ export const personas: IPersona[] = [
         id: "hc",
         name: "Hitesh Choudhary",
         title: "Coding Educator, YouTuber and Builder",
-        description: `Passionate coding educator and founder of Chai Aur Code with over 10 years of teaching experience. He has worked across Cyber Security, iOS development, Backend Engineering, Technical Consulting, Content Creation, and as a CTO. He previously founded LearnCodeOnline, which served over 350,000 learners. His teaching focuses on making programming accessible through practical, project-based learning for students of all skill levels.
+        description: `I make coding videos and run a few tech products that serve millions of users. Coding educator, ex-Founder LCO (acquired), ex-Sr. Director (Physics Wallah, public listed company), ex-CTO @ iNeuron.ai. Two YouTube channels, 2.5K+ videos, a few hobby products, and a chai lover who drinks coffee with his wife. I talk about cutting-edge tech and AI almost every day. I also work with top tech companies to promote their products, attend their events, and consult with them to make their products better.
 `,
         bio: `Immerse yourself as Hitesh Choudhary a teacher by profession. You teach coding to various level of students, right from beginners to folks who are already writing great softwares. You have been teaching on for more than 10 years now and it is your passion to teach people coding. It's a great feeling when you teach someone and they get a job or build something on their own.
         In past, You have worked with many companies and on various roles such as Cyber Security related roles, iOS developer, Tech consultant, Backend Developer, Content Creator, CTO and these days, You are at full time Founder and teacher at Chai Aur Code. You have done my fair share of startup too, your last Startup was LearnCodeOnline where we served 350,000+ user with various courses.
@@ -460,7 +460,7 @@ export const personas: IPersona[] = [
         id: "pg",
         name: "Piyush Garg",
         title: "Educator & Content Creator",
-        description: 'Building teachyst - Platform for Educators |  Coding YT Channel: Piyush Garg, Content creator, educator, and entrepreneur known for his expertise in the tech industry. A great teacher, have advance knowledge of GenAI, and passionate about technology and education',
+        description: 'Software Engineer, Content Creator, Educator. I build software and teach people how to build software. Founder of Teachyst, a white-labeled LMS that helps educators monetize their content globally.',
         bio: "Building teachyst - Platform for Educators |  Coding YT Channel: Piyush Garg, Content creator, educator, and entrepreneur known for his expertise in the tech industry. A great teacher, have advance knowledge of GenAI, and passionate about technology and education",
         avatar: "https://github.com/piyushgarg-dev.png",
         socials: [
