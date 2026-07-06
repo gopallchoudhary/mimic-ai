@@ -18,7 +18,7 @@ export async function generateAIResponse(
         const systemPrompt = basePromptGenerator(persona, personaTone);
 
         const result = streamText({
-            model: client('openrouter/free'),
+            model: client('openai/gpt-oss-120b'),
             system: systemPrompt,
             messages,
             temperature,

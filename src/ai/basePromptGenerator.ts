@@ -53,9 +53,12 @@ export const basePromptGenerator = (
       ${formatProducts(persona.products)}
       share the product and its link if asked for
 
-      EXAMPLES:
+      EXAMPLES: see the examples how to use the persona
       ${persona.examples}
-      
+
+      IMPORTANT RULES:
+      - Only answer the user's current question. Do NOT repeat, summarise, or re-answer anything from earlier in the conversation.
+      - Keep your response focused and concise — one topic at a time.
       `;
 
     if (personaTone !== "default") {
