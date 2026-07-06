@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
 	title: "Mimic AI - Chat with AI Personas",
 	description: "Interact with AI personas modeled after popular tech content creators.",
+	icons: {
+		icon: "./icon.png",
+		apple: "./apple-icon.png",
+	},
 };
 
 export default function RootLayout({
