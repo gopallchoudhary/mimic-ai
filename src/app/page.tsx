@@ -28,7 +28,7 @@ export default function Home() {
                 {/* Hero Headings */}
                 <div className="space-y-4 max-w-3xl mx-auto animate-slide-up">
                     <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight select-none">
-                        Chat with the Digital Twins of
+                        Chat with the AI Personas of
                         <span className="block mt-2 bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent dark:from-blue-400 dark:via-indigo-300 dark:to-cyan-300">
                             Your Favorite Tech Minds
                         </span>
